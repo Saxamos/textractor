@@ -1,0 +1,80 @@
+{
+  "304969": {
+    "FUND_NAME": "R-co OPAL Europe Equity",
+    "PART_ISIN": {
+      "C EUR": "FR0010241703",
+      "I EUR": "FR0010828830"
+    },
+    "FUND_TYPE": "OPCVM",
+    "INCEPTION": "3 mai 1990",
+    "BENCHMARK": "MSCI Daily TR Net Europe",
+    "FEE": {
+      "IN": "4,00%",
+      "OUT": "Néant",
+      "CURRENT": "2,62%",
+      "PERF": "Néant"
+    },
+    "DEPOSITARY": "CACEIS BANK",
+    "CLOSING_DATE": "date de la dernière VL du mois de décembre de chaque année.",
+    "CLASSIFICATION": "Actions Internationales",
+    "OVERALL_RISK_CALCULATION_METHOD": "La méthode de calcul du ratio du risque global est celle de l’approche par l’engagement."
+  },
+  "308876": {
+    "FUND_NAME": "AMUNDI ETF SHORT GOVT BOND EUROMTS BROAD INVESTMENT GRADE DAILY UCITS",
+    "PART_ISIN": {
+      "(C)": "FR0010821850"
+    },
+    "FUND_TYPE": "OPCVM",
+    "INCEPTION": "15 décembre 2009",
+    "BENCHMARK": "FTSE MTS Short Eurozone Government Broad IG",
+    "FEE": {
+      "IN": "0",
+      "OUT": "0",
+      "CURRENT": "0,14% de l'actif net moyen",
+      "PERF": "0"
+    },
+    "DEPOSITARY": "CACEIS Bank",
+    "CLOSING_DATE": "dernier Jour de Bourse du mois de mars de chaque année.",
+    "CLASSIFICATION": "Le Fonds est un fonds indiciel de stratégie.",
+    "OVERALL_RISK_CALCULATION_METHOD": "Méthode de calcul de l'engagement."
+  },
+  "312444": {
+    "FUND_NAME": "KIPLINK ENTREPRISES",
+    "PART_ISIN": {
+      "Part C": "FR0010827469",
+      "Part I": "FR0012300440"
+    },
+    "FUND_TYPE": "OPCVM",
+    "INCEPTION": "08/01/2010",
+    "BENCHMARK": "STOXX EUROPE 50",
+    "FEE": {
+      "IN": "3%",
+      "OUT": "0%",
+      "CURRENT": "2,95 % TTC",
+      "PERF": "20% TTC de la performance nette annuelle au-delà de celle de l’indice de référence, uniquement si celle-ci est positive avec High water Mark. 0.00% prélevé au titre du dernier exercice"
+    },
+    "DEPOSITARY": "CACEIS Bank",
+    "CLOSING_DATE": "dernier jour de Bourse de Paris du mois de Mars",
+    "CLASSIFICATION": "Actions des pays de l’Union Européenne",
+    "OVERALL_RISK_CALCULATION_METHOD": "Le risque global sur contrats financiers est calculé selon la méthode du calcul de l’engagement."
+  },
+  "170276": {
+    "FUND_NAME": "DANONE.COMMUNITIES D. ISR PRUDENT",
+    "PART_ISIN": {
+      "Part C/D": "FR0010439935"
+    },
+    "FUND_TYPE": "OPCVM",
+    "INCEPTION": "04/05/2007",
+    "BENCHMARK": "EONIA capitalisé",
+    "FEE": {
+      "IN": "1.00%",
+      "OUT": "0,50%",
+      "CURRENT": "0,55% de l'actif net moyen",
+      "PERF": "Néant"
+    },
+    "DEPOSITARY": "CACEIS BANK FRANCE",
+    "CLOSING_DATE": "dernière valeur liquidative du mois de décembre",
+    "CLASSIFICATION": "Obligations et autres titres de créance libellés en euro",
+    "OVERALL_RISK_CALCULATION_METHOD": "L’engagement"
+  }
+}

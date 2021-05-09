@@ -1,0 +1,16 @@
+# hidden files
+.ipynb_checkpoints/
+__pycache__/
+.idea
+
+# data
+prospectus_field_extraction/data/raw
+prospectus_field_extraction/data/golden
+prospectus_field_extraction/data/list_of_annotated_fund.json
+
+prospectus_text_classification/data/raw
+prospectus_text_classification/data/golden
+prospectus_text_classification/data/app
+
+# model
+prospectus_field_extraction/model/ner/ckpt*

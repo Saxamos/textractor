@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="author" content="">
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link href="https://rawcss.com/raw.css" rel="stylesheet">
+  <style>
+    .preview { width: calc(100vw - 150px);max-height: 100%; }
+    .list { width: 150px; }
+    .pdf { width: 40%; }
+    .text { width: 60%; }
+    .full { width: 100%; }
+    .text { padding: 20px; max-height: 100%; overflow: scroll; }
+    .paragraph { width: 60%;position: relative; }
+    .labels { width: 30%;padding-left: 10px;}
+    .labels button { margin: 2px;padding: 4px 8px;justify-content: left;text-transform: uppercase;font-weight: bold; }
+    .delete { position: absolute;top: -15px;left: -15px;border-radius: 30px;width: 30px;height: 30px;background: #D80143;box-shadow: 0 1px 3px 1px rgba(60,64,67,.3); }
+    .delete svg { height: 20px;width: 20px;margin: 5px;fill: white; }
+    button.delete { display: none; }
+    .annotation { padding: 20px 0; }
+    .header { font-weight: 800;font-size: 16px; }
+    .object-card { border-radius: 3px;padding: 15px;box-shadow: 0 1px 1px 0 rgba(60,64,67,.08), 0 1px 3px 1px rgba(60,64,67,.16); }
+    .menu { justify-content: space-between;border-bottom: 1px solid #EEE;padding: 0 30px; }
+
+    ul { list-style: none;padding: 0;margin: 0;max-height: 100%;overflow: scroll;box-shadow: 0 1px 3px 1px rgba(60,64,67,.16); }
+    ul a { padding: 7px 0;padding-left: 30px;text-align: left;width: 100%;color: #444; }
+    ul li { width: 100%;color: #444; }
+    ul a:hover, .active { background: #EEE;color: #222; }
+
+
+  </style>
+</head>
+
+<body>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3-dsv/1.0.8/d3-dsv.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
+<main>
+  <div class="row menu">
+    <h2>Prospectus extraction tool</h2>
+    <div style="padding-top: 15px;padding-right: 30px;">
+      <button @click="dlCSV(text, 'en', selected.split('/').last().split('.').first() + '-annotated.csv')"
+              v-if="text.length">Download annotations
+      </button>
+    </div>
+  </div>
+  <div class="row" style="height: calc(100vh - 63px);">
+    <ul class="list">
+      <div style="padding-left: 30px;padding-top: 10px;padding-bottom: 7px;border-bottom: 1px solid #DDD;">Select
+        file:
+      </div>
+      <a v-for="file in (csv || []).map('file').unique().sort()" v-on:click="selected = file"
+         :class="{ active: selected === file }">
+        <li>{{ file.replace('.txt', '.pdf').split('/')[8] }}</li>
+      </a>
+    </ul>
+    <div class="preview row" v-if="selected">
+      <div class="text">
+        <a @click="show_deleted = !show_deleted">{{show_deleted ? 'Hide deleted' : 'Show deleted' }}</a>
+        <div class="row header">
+          <div class="paragraph">Text</div>
+          <div class="labels">Labels</div>
+        </div>
+        <div class="row annotation" v-for="annotation in text"
+             v-if="annotation.text.length && (show_deleted || annotation.label !== 'delete')">
+          <div class="paragraph object-card"
+               :style="{ color: annotation.label ? 'white': 'black', background: annotation.label ? labels.find(d => d.label === annotation.label).color : 'white' }">
+            {{ annotation.text }}
+            <a class="delete" @click="update_label(annotation, 'delete')">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/>
+                <path d="M0 0h24v24H0z" fill="none"/>
+              </svg>
+            </a>
+          </div>
+          <div class="labels column">
+            <button :class="label.label" @click="update_label(annotation, label.label)"
+                    :style="{ background: label.color }" v-for="label in labels">{{ label.label }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="pdf">
+        <iframe class="full" :src="selected.split('/').slice(6).join('/').replace('.txt', '.pdf')"
+                height="100%"></iframe>
+      </div>
+    </div>
+  </div>
+</main>
+<script type="module">
+    import Vue from 'https://unpkg.com/vue@2.6.10/dist/vue.esm.browser.js'
+    import 'https://cdn.jsdelivr.net/gh/vbrajon/rawjs/raw.js'
+    Array.last = (arr) => arr.slice(0, -1)[0]
+    Array.first = (arr) => arr[0]
+    Array.max = (arr) => arr.slice().sort((a, b) => b - a)[0]
+    Object.max = (obj) => obj.find(Object.values(obj).slice().sort((a, b) => b - a)[0])
+    raw()
+    window.type = Vue.prototype.type = x => Object.prototype.toString.call(x).slice(8, -1).toLowerCase()
+
+    // Vue.use(antd.Slider)
+    window.vm = new Vue({
+      el: 'main',
+      created () {
+        axios.get('data/golden/prospectus.csv').then(r => {
+          this.csv = d3.csvParse(r.data)
+        })
+      },
+      data: {
+        selected: '',
+        text: [],
+        csv: '',
+        show_deleted: false,
+        labels: [
+          { label: 'objectives', color: '#969692' },
+          { label: 'risk_profile', color: '#728692' },
+          { label: 'fees', color: '#4CC6B2' },
+          { label: 'past_performance', color: '#6E9FCC' },
+          { label: 'information', color: '#8A6891' },
+          { label: 'delete', color: '#D80143' },
+        ]
+      },
+      watch: {
+        'selected': function(value) {
+          axios.get(value.split('/').slice(6).join('/')).then(r => {
+            this.text = r.data.split('\n').map((d, i) => ({ text: d, id: i, label: '' }))
+            this.predict_labels()
+          })
+        },
+      },
+      methods: {
+        update_label(annotation, label) {
+          annotation.label = annotation.label === label ? '' : label
+          Vue.set(this.text, annotation.id, annotation)
+        },
+        predict_labels() {
+          const inputs = this.text.slice(0, 200).map('text')
+          axios.post('http://0.0.0.0:5000/predict', { input: inputs }).then(d => {
+            d.data.map((v, k) => this.text[k].label = (v.max() || ''))
+          })
+        },
+        dlCSV(arr, lang, filename, browser) {
+          const sep = lang === 'fr' ? ';' : ','
+          if (browser === 'ie') {
+            const IEwindow = window.open()
+            IEwindow.document.write('sep=,\r\n' + arr.toCSV(sep, lang))
+            IEwindow.document.close()
+            IEwindow.document.execCommand('SaveAs', true, filename || 'table.csv')
+            IEwindow.close()
+          } else {
+            const content = `${this.toCSV(arr, sep, lang)}`
+            var blob = new Blob(['\ufeff', content])
+            var url = URL.createObjectURL(blob)
+            const link = document.createElement('a')
+            link.setAttribute('href', url)
+            link.setAttribute('style', 'display: none;')
+            link.setAttribute('download', filename || 'table.csv')
+            document.body.appendChild(link) // Required for FF
+            link.click()
+          }
+        },
+        toCSV(arr, sep, lang) {
+          const keys = Object.keys(arr[0]).map(d => this.escapeCSV(d, lang, sep))
+          const values = arr.map(o => Object.values(o).map(d => this.escapeCSV(d, lang, sep)))
+          return [keys]
+            .concat(values)
+            .map(d => d.join(sep))
+            .join('\n')
+        },
+        escapeCSV(s, lang, sep) {
+          if (type(s) === 'number' && lang === 'fr') return ('' + s).replace('.', ',')
+          if (type(s) === 'string' && s.indexOf(sep) > -1) return '"' + s.split('"').join('""') + '"'
+          return s
+        },
+      }
+    })
+</script>
+</body>
+
+</html>
